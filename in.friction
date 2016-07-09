@@ -22,24 +22,28 @@ mass		4 1.0
 
 #region          lo-fixed block INF INF INF 1.1 INF INF
 #region          lo-slab block INF INF INF 7 INF INF
-#region          above-lo block INF INF INF 7 INF INF side out
+region          above-lo block INF INF INF 7 INF INF side out
 #region          hi-fixed block INF INF 20.9 INF INF INF
 #region          hi-slab block INF INF 15 INF INF INF
-#region          below-hi block INF INF 15 INF INF INF side out
+region          below-hi block INF INF 15 INF INF INF side out
 region		lo-asperity sphere 32 7 0 8
 region		hi-asperity sphere 18 15 0 8
-#region		lo-half-sphere intersect 2 lo-asperity above-lo
-#region		hi-half-sphere intersect 2 hi-asperity below-hi
+region		lo-half-sphere intersect 2 lo-asperity above-lo
+region		hi-half-sphere intersect 2 hi-asperity below-hi
+region      lo-fix  cylinder y 32 0 8 4 7 
+region      hi-fix  cylinder y 18 0 8 15 18
 
 # create 2 surfaces with asperities
 
 #create_atoms	1 region lo-slab
 #create_atoms	1 region hi-slab
-#create_atoms	2 region lo-half-sphere
-#create_atoms	3 region hi-half-sphere
+create_atoms	2 region lo-half-sphere
+create_atoms	3 region hi-half-sphere
 
-create_atoms	1 region lo-asperity
-create_atoms	2 region hi-asperity
+#create_atoms	1 region lo-asperity
+#create_atoms	2 region hi-asperity
+create_atoms    3 region lo-fix
+create_atoms    3 region hi-fix
 
 # LJ potentials
 
@@ -52,21 +56,21 @@ pair_coeff	* * 1.0 1.0 2.5
 #group		lo type 2
 #group		hi region hi-slab
 #group		hi type 3
-#group		lo-fixed region lo-fixed
-#group		hi-fixed region hi-fixed
+group		lo-fixed region lo-fix
+group		hi-fixed region hi-fix
 #group		boundary union lo-fixed hi-fixed
 #group		mobile subtract all boundary
 
-group       lo region lo-asperity
+group       lo region lo-half-sphere
 group		lo type 1
-group       hi region hi-asperity
-group		lo type 2
+group       hi region hi-half-sphere
+group		lo type 1
 
-#set		group lo-fixed type 4
-#set		group hi-fixed type 4
+set		group lo-fixed type 1
+set		group hi-fixed type 1
 
 set         group lo type 1
-set         group hi type 2
+set         group hi type 1
 
 # initial velocities
 
@@ -94,8 +98,8 @@ thermo_modify	temp new
 
 #dump		1 all atom 500 dump.friction
 
-dump		2 all image 500 image.*.jpg type type &
-		zoom 1.6 adiam 1.5
+dump		2 all image 500 run1/image.*.jpg type type &
+		zoom 1.6 adiam 1.5 # view 180 270
 #dump_modify	2 pad 5
 
 #dump		3 all movie 500 movie.mpg type type &
