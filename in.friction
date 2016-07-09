@@ -4,19 +4,21 @@ dimension	3
 boundary	p s p
 
 atom_style	atomic
-neighbor	0.3 bin
+neighbor	2 bin
 neigh_modify	delay 5
+
+units metal
 
 # create geometry
 
-lattice		hcp 0.98
+lattice		fcc 4
 region		box block 0 50 0 19 -5 5
 create_box	4 box
 
-mass		1 1.0
-mass		2 1.0
-mass		3 1.0
-mass		4 1.0
+#mass		1 1.0
+#mass		2 1.0
+#mass		3 1.0
+#mass		4 1.0
 
 # atom regions
 
@@ -47,8 +49,11 @@ create_atoms    3 region lo-fix
 
 # LJ potentials
 
-pair_style	lj/cut 0.3
-pair_coeff	* * 1.0 1.0 2.5
+# pair_style	lj/cut 0.3
+# pair_coeff	* * 1.0 1.0 2.5
+
+pair_style eam/alloy 
+pair_coeff * * Al99.eam.alloy Al Al Al Al
 
 # define groups
 
@@ -67,14 +72,14 @@ group       hi-half region hi-half-sphere
 #group		hi-half type 1
 
 
-#set		group lo-fixed type 1
-#set		group hi-fixed type 1
+#set		group lo-fixed # type 1
+#set		group hi-fixed # type 1
 
 group  lo union lo-half lo-fixed
 group  hi union hi-half hi-fixed
 
-set         group lo type 1
-set         group hi type 1
+#set         group lo # type 1
+#set         group hi # type 1
 
 # initial velocities
 
@@ -103,7 +108,7 @@ thermo		100
 #dump		1 all atom 500 dump.friction
 
 dump		2 all image 500 run1/image.*.jpg type type &
-		zoom 1.6 adiam 1.5 view 90 270
+		zoom 1.6 adiam 1.5 view 180 270
 #dump_modify	2 pad 5
 
 #dump		3 all movie 500 movie.mpg type type &
