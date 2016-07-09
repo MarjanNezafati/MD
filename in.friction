@@ -12,8 +12,8 @@ units metal
 # create geometry
 
 lattice		fcc 4
-region		box block 0 50 0 19 -5 5
-create_box	4 box
+region		box block 0 50 0 25 -5 5
+create_box	1 box
 
 #mass		1 1.0
 #mass		2 1.0
@@ -26,25 +26,25 @@ create_box	4 box
 #region          lo-slab block INF INF INF 7 INF INF
 region          above-lo block INF INF INF 7 INF INF side out
 #region          hi-fixed block INF INF 20.9 INF INF INF
-region          hi-slab block INF INF 15 INF INF INF
-region          below-hi block INF INF 15 INF INF INF side out
+region          hi-slab block INF INF 20 INF INF INF
+region          below-hi block INF INF 20 INF INF INF side out
 region		lo-asperity sphere 30.5 7 0 8
-region		hi-asperity sphere 18 15 0 8
+region		hi-asperity sphere 18 21 0 8
 region		lo-half-sphere intersect 2 lo-asperity above-lo
 region		hi-half-sphere intersect 2 hi-asperity below-hi
 region      lo-fix  cylinder y 30.5 0 8 4 7 
-#region      hi-fix  cylinder y 18 0 8 15 39
+#region      hi-fix  cylinder y 18 0 8 21 25
 
 # create 2 surfaces with asperities
 
 #create_atoms	1 region lo-slab
 create_atoms	1 region hi-slab
-create_atoms	2 region lo-half-sphere
-create_atoms	3 region hi-half-sphere
+create_atoms	1 region lo-half-sphere
+create_atoms	1 region hi-half-sphere
 
 #create_atoms	1 region lo-asperity
 #create_atoms	2 region hi-asperity
-create_atoms    3 region lo-fix
+create_atoms    1 region lo-fix
 #create_atoms    3 region hi-fix
 
 # LJ potentials
@@ -53,7 +53,7 @@ create_atoms    3 region lo-fix
 # pair_coeff	* * 1.0 1.0 2.5
 
 pair_style eam/alloy 
-pair_coeff * * Al99.eam.alloy Al Al Al Al
+pair_coeff * * Al99.eam.alloy Al 
 
 # define groups
 
@@ -108,7 +108,7 @@ thermo		100
 #dump		1 all atom 500 dump.friction
 
 dump		2 all image 500 run1/image.*.jpg type type &
-		zoom 1.6 adiam 1.5 view 180 270
+		zoom 1.6 adiam 1.5 view 180 90
 #dump_modify	2 pad 5
 
 #dump		3 all movie 500 movie.mpg type type &
